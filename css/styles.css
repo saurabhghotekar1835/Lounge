@@ -3630,6 +3630,13 @@ td:last-child {
     margin-top : 0;
 }
 
+/* Mobile-specific title size reduction */
+@media screen and (max-width: 600px) {
+    .intro-header__big-type {
+        font-size: clamp(calc(var(--text-2xl) * 0.7), calc((var(--text-xl) + 4.8vw) * 0.7), calc(8.4rem * 0.7));
+    }
+}
+
 .intro-pic-primary {
     --pic-primary-width: calc((100 / (12/4)) * 1%);
     --pic-primary-mleft: calc(var(--pic-primary-width) / 2);
