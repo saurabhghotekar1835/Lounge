@@ -4635,6 +4635,16 @@ td:last-child {
     --footer-logo-width: 16rem;
     
     padding-bottom     : var(--bottom-padding);
+    position          : relative;
+    z-index           : 1;
+    margin-top        : var(--vspace-3);
+}
+
+/* Fix for footer overlapping gallery */
+#gallery {
+    margin-bottom: var(--vspace-3);
+    position: relative;
+    z-index: 2;
 }
 
 .s-footer h6 {

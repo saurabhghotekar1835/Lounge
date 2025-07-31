@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gallery Test</title>
+    <style>
+        .gallery-items__item {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            width: 200px;
+            height: 150px;
+        }
+        .gallery-items__item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gallery Image Test</h1>
+    <p>This test shows how the gallery handles missing images. Items with missing images should be hidden.</p>
+    
+    <div class="gallery-items grid-cols grid-cols--wrap">
+        <!-- Existing image -->
+        <div class="gallery-items__item grid-cols__column">
+            <a href="images/gallery/large/l-gallery-01.JPG" class="gallery-items__item-thumb glightbox">
+                <img src="images/gallery/gallery-01.jpg" alt="Gallery 01">
+            </a>
+        </div>
+        
+        <!-- Missing image -->
+        <div class="gallery-items__item grid-cols__column">
+            <a href="images/gallery/large/missing-image.jpg" class="gallery-items__item-thumb glightbox">
+                <img src="images/gallery/missing-image.jpg" alt="Missing Image">
+            </a>
+        </div>
+        
+        <!-- Another existing image -->
+        <div class="gallery-items__item grid-cols__column">
+            <a href="images/gallery/large/l-gallery-02.JPG" class="gallery-items__item-thumb glightbox">
+                <img src="images/gallery/gallery-02.jpg" alt="Gallery 02">
+            </a>
+        </div>
+        
+        <!-- Another missing image -->
+        <div class="gallery-items__item grid-cols__column">
+            <a href="images/gallery/large/another-missing.jpg" class="gallery-items__item-thumb glightbox">
+                <img src="images/gallery/another-missing.jpg" alt="Another Missing Image">
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Gallery image check function
+        const ssGalleryImageCheck = function() {
+            const galleryItems = document.querySelectorAll('.gallery-items__item');
+            if (!galleryItems.length) return;
+
+            let loadedImages = 0;
+            let totalImages = galleryItems.length;
+
+            galleryItems.forEach(function(item) {
+                const img = item.querySelector('img');
+                if (!img) {
+                    item.style.display = 'none';
+                    loadedImages++;
+                    return;
+                }
+
+                // Check if image loads successfully
+                img.addEventListener('load', function() {
+                    console.log('Image loaded successfully:', img.src);
+                    loadedImages++;
+                    checkAllImagesLoaded();
+                });
+
+                img.addEventListener('error', function() {
+                    console.log('Image failed to load, hiding item:', img.src);
+                    item.style.display = 'none';
+                    loadedImages++;
+                    checkAllImagesLoaded();
+                });
+
+                // If image is already loaded (cached), check if it has natural dimensions
+                if (img.complete) {
+                    if (img.naturalWidth === 0 || img.naturalHeight === 0) {
+                        console.log('Image has no dimensions, hiding item:', img.src);
+                        item.style.display = 'none';
+                    }
+                    loadedImages++;
+                    checkAllImagesLoaded();
+                }
+            });
+
+            function checkAllImagesLoaded() {
+                if (loadedImages >= totalImages) {
+                    // All images have been processed, check if any are visible
+                    const visibleItems = document.querySelectorAll('.gallery-items__item:not([style*="display: none"])');
+                    const gallerySection = document.querySelector('.gallery-items');
+                    
+                    console.log('Total items:', totalImages);
+                    console.log('Visible items:', visibleItems.length);
+                    console.log('Hidden items:', totalImages - visibleItems.length);
+                    
+                    if (visibleItems.length === 0 && gallerySection) {
+                        gallerySection.style.display = 'none';
+                        console.log('All gallery items are hidden, hiding entire gallery section');
+                    }
+                }
+            }
+
+            // Fallback: if images take too long, check after 2 seconds
+            setTimeout(function() {
+                if (loadedImages < totalImages) {
+                    loadedImages = totalImages;
+                    checkAllImagesLoaded();
+                }
+            }, 2000);
+        };
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            ssGalleryImageCheck();
+        });
+    </script>
+</body>
+</html> 

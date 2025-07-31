@@ -681,6 +681,71 @@
     }; // end ssSmoothScroll
 
 
+   /* gallery image check
+    * ------------------------------------------------------ */ 
+    const ssGalleryImageCheck = function() {
+
+        const galleryItems = document.querySelectorAll('.gallery-items__item');
+        if (!galleryItems.length) return;
+
+        let loadedImages = 0;
+        let totalImages = galleryItems.length;
+
+        galleryItems.forEach(function(item) {
+            const img = item.querySelector('img');
+            if (!img) {
+                item.style.display = 'none';
+                loadedImages++;
+                return;
+            }
+
+            // Check if image loads successfully
+            img.addEventListener('load', function() {
+                // Image loaded successfully, keep item visible
+                loadedImages++;
+                checkAllImagesLoaded();
+            });
+
+            img.addEventListener('error', function() {
+                // Image failed to load, hide the entire gallery item
+                item.style.display = 'none';
+                loadedImages++;
+                checkAllImagesLoaded();
+            });
+
+            // If image is already loaded (cached), check if it has natural dimensions
+            if (img.complete) {
+                if (img.naturalWidth === 0 || img.naturalHeight === 0) {
+                    item.style.display = 'none';
+                }
+                loadedImages++;
+                checkAllImagesLoaded();
+            }
+        });
+
+        function checkAllImagesLoaded() {
+            if (loadedImages >= totalImages) {
+                // All images have been processed, check if any are visible
+                const visibleItems = document.querySelectorAll('.gallery-items__item:not([style*="display: none"])');
+                const gallerySection = document.querySelector('#gallery');
+                
+                if (visibleItems.length === 0 && gallerySection) {
+                    gallerySection.style.display = 'none';
+                }
+            }
+        }
+
+        // Fallback: if images take too long, check after 2 seconds
+        setTimeout(function() {
+            if (loadedImages < totalImages) {
+                loadedImages = totalImages;
+                checkAllImagesLoaded();
+            }
+        }, 2000);
+
+    }; // end ssGalleryImageCheck
+
+
    /* Initialize
     * ------------------------------------------------------ */
     (function ssInit() {
@@ -695,6 +760,7 @@
         ssMailChimpForm();
         ssAlertBoxes();
         ssSmoothScroll();
+        ssGalleryImageCheck();
 
     })();
 
