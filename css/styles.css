@@ -4515,6 +4515,46 @@ td:last-child {
     }
 }
 
+/* ------------------------------------------------------------------- 
+ * ## gallery section titles
+ * ------------------------------------------------------------------- */
+.s-gallery__section {
+    margin-top: var(--vspace-3);
+    margin-bottom: var(--vspace-2);
+}
+
+.s-gallery__section:first-child {
+    margin-top: var(--vspace-1);
+}
+
+.gallery-section-title {
+    font-family: var(--font-2);
+    font-size: var(--text-display-3);
+    font-weight: 600;
+    color: var(--color-text-dark);
+    margin: 0;
+    text-align: center;
+    position: relative;
+    padding-bottom: var(--vspace-1);
+}
+
+.gallery-section-title::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background-color: var(--color-1);
+}
+
+@media screen and (max-width: 600px) {
+    .gallery-section-title {
+        font-size: var(--text-display-4);
+    }
+}
+
 
 /* ===================================================================
  * # TESTIMONIALS
